@@ -1,9 +1,6 @@
-name: Deploy 🚚 [UniBas-IMCF-Beta]
+name: Deploy 🚚 [UniBas-IMCF-update-site]
 
 on:
-  push:
-    branches: ["**"] # Any branch; upload only happens on main
-  workflow_dispatch: # Allow to run this workflow manually from the Actions tab
     inputs:
       update_site:
         description: Update site to publish to
