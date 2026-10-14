@@ -64,7 +64,7 @@ jobs:
                   ! -name '*-sources.jar' ! -name '*-javadoc.jar' ! -name '*-tests.jar' \
                   | head -n1)
               # Always name the jar <artifactId>-<version>.jar
-              cp -v "$JAR" "Fiji.app/jars/${ARTIFACT}-${VERSION}.jar"
+              cp -v "$JAR" "Fiji/jars/${ARTIFACT}-${VERSION}.jar"
               echo "${ARTIFACT}-${VERSION}.jar" >> build/jars.txt
           done
 
