@@ -12,8 +12,8 @@ jobs:
   assemble-fiji:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
-        channel: [ fiji-latest, fiji-stable ]
+        os: [ubuntu-latest, windows-latest]
+        channel: [fiji-latest, fiji-stable]
     runs-on: ${{ matrix.os }}
     steps:
       - name: 📥 Checkout repository
@@ -45,7 +45,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: fiji-*.zip
-          key: fiji-base-${{ matrix.channel }}-${{ steps.set_platform.outputs.PLATFORM
+          key:
+            fiji-base-${{ matrix.channel }}-${{ steps.set_platform.outputs.PLATFORM
             }}-${{ hashFiles('manage/assemble-fresh-fiji-installation.sh') }}
 
       - name: 🛠️ Install X11 libraries (Linux only)
