@@ -4,6 +4,14 @@ on:
   push:
     branches: ["**"] # Any branch; upload only happens on main
   workflow_dispatch: # Allow to run this workflow manually from the Actions tab
+    inputs:
+      update_site:
+        description: Update site to publish to
+        type: choice
+        default: UniBas-IMCF-Beta
+        options:
+          - UniBas-IMCF-Beta
+          - UniBas-IMCF
 
 jobs:
   publish-update-site:
@@ -12,7 +20,7 @@ jobs:
       IJ_DOWNLOAD_URL: https://downloads.imagej.net/fiji/latest/fiji-latest-linux64-jdk.zip
       WIKI_USER: ${{ secrets.UPDATE_SITE_USER }}
       UPDATE_PASS: ${{ secrets.UPDATE_SITE_PASS }}
-      UPDATE_SITE: UniBas-IMCF-Beta
+      UPDATE_SITE: ${{ inputs.update_site || 'UniBas-IMCF-Beta' }}
 
     steps:
       - name: 📥 Checkout
