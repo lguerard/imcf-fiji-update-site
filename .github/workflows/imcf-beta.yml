@@ -9,7 +9,7 @@ jobs:
   publish-update-site:
     runs-on: ubuntu-latest
     env:
-      IJ_DOWNLOAD_URL: https://downloads.imagej.net/fiji/latest/fiji-linux64.zip
+      IJ_DOWNLOAD_URL: https://downloads.imagej.net/fiji/latest/fiji-latest-linux64-jdk.zip
       WIKI_USER: ${{ secrets.UPDATE_SITE_USER }}
       UPDATE_PASS: ${{ secrets.UPDATE_SITE_PASS }}
       UPDATE_SITE: UniBas-IMCF-Beta
