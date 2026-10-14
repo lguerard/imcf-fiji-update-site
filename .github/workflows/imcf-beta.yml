@@ -26,7 +26,7 @@ jobs:
 
       - name: 🔁 Add Fiji update site
         run: |
-          .fiji-latest-linux64-jdk/Fiji/fiji-linux-x64 \
+          ./fiji-latest-linux64-jdk/Fiji/fiji-linux-x64 \
               --headless \
               --update \
                   edit-update-site \
