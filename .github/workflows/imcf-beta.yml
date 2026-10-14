@@ -2,7 +2,7 @@ name: Deploy 🚚 [UniBas-IMCF-Beta]
 
 on:
   push:
-    branches: [main, devel] # Trigger the workflow on push to the main branch
+    branches: ["**"] # Any branch; upload only happens on main
   workflow_dispatch: # Allow to run this workflow manually from the Actions tab
 
 jobs:
