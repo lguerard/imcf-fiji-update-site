@@ -2,13 +2,11 @@ name: Deploy 🚚 [UniBas-IMCF-Beta]
 
 on:
   push:
-    branches: [main]  # Trigger the workflow on push to the main branch
-  workflow_dispatch:  # Allow to run this workflow manually from the Actions tab
+    branches: [main] # Trigger the workflow on push to the main branch
+  workflow_dispatch: # Allow to run this workflow manually from the Actions tab
 
 jobs:
-
   publish-update-site:
-
     runs-on: ubuntu-latest
     env:
       IJ_DOWNLOAD_URL: https://downloads.imagej.net/fiji/latest/fiji-linux64.zip
@@ -17,7 +15,6 @@ jobs:
       UPDATE_SITE: UniBas-IMCF-Beta
 
     steps:
-
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
@@ -38,12 +35,45 @@ jobs:
                   "webdav:${WIKI_USER}:${UPDATE_PASS}" \
                   .
 
-      - name: 👷 Install scripts and artifacts 💎👑 into ImageJ/Fiji
-        run: bash ./manage/assemble-fiji-components.sh ${UPDATE_SITE}
+      # - name: 👷 Install scripts and artifacts 💎👑 into ImageJ/Fiji
+      #   run: bash ./manage/assemble-fiji-components.sh ${UPDATE_SITE}
+
+      - name: ☕ Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: 🔨 Build JARs from GitHub repositories
+        run: |
+          REPOS_JSON="site-settings/${UPDATE_SITE}/github-repos.json"
+          mkdir -p Fiji.app/jars build
+          : > build/jars.txt
+          jq -c '.[]' "$REPOS_JSON" | while read -r ENTRY; do
+              REPO=$(jq -r '.repo' <<<"$ENTRY")
+              REF=$(jq -r '.ref // empty' <<<"$ENTRY")
+              DEST="build/$(basename "$REPO")"
+              git clone --quiet --depth 1 ${REF:+--branch "$REF"} \
+                  "https://github.com/$REPO.git" "$DEST"
+              mvn -B -q -f "$DEST/pom.xml" package -DskipTests
+              ARTIFACT=$(mvn -B -q -f "$DEST/pom.xml" help:evaluate \
+                  -Dexpression=project.artifactId -DforceStdout)
+              VERSION=$(mvn -B -q -f "$DEST/pom.xml" help:evaluate \
+                  -Dexpression=project.version -DforceStdout)
+              JAR=$(find "$DEST/target" -maxdepth 1 -name '*.jar' \
+                  ! -name '*-sources.jar' ! -name '*-javadoc.jar' ! -name '*-tests.jar' \
+                  | head -n1)
+              # Always name the jar <artifactId>-<version>.jar
+              cp -v "$JAR" "Fiji.app/jars/${ARTIFACT}-${VERSION}.jar"
+              echo "${ARTIFACT}-${VERSION}.jar" >> build/jars.txt
+          done
 
       - name: 🎁 📤 Release to ImageJ update site
         run: |
+          JARS=$(sed 's|^|jars/|' build/jars.txt)
           ./Fiji.app/ImageJ-linux64 \
               --headless \
-              --update upload-complete-site \
-              --force ${UPDATE_SITE}
+              --update upload \
+              --update-site ${UPDATE_SITE} \
+              $JARS
