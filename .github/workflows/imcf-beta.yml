@@ -47,7 +47,7 @@ jobs:
       - name: 🔨 Build JARs from GitHub repositories
         run: |
           REPOS_JSON="site-settings/${UPDATE_SITE}/github-repos.json"
-          mkdir -p Fiji.app/jars build
+          mkdir -p Fiji/jars build
           : > build/jars.txt
           jq -c '.[]' "$REPOS_JSON" | while read -r ENTRY; do
               REPO=$(jq -r '.repo' <<<"$ENTRY")
@@ -74,7 +74,7 @@ jobs:
           # Only upload from main, otherwise just print the command
           DRY=""
           [ "${GITHUB_REF_NAME}" != "main" ] && DRY="echo [DRY RUN]"
-          $DRY ./Fiji.app/ImageJ-linux64 \
+          $DRY ./Fiji/fiji-linux-x64 \
               --headless \
               --update upload \
               --update-site ${UPDATE_SITE} \
