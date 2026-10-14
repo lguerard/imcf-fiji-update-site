@@ -22,7 +22,7 @@ jobs:
         run: curl --silent -O ${IJ_DOWNLOAD_URL}
 
       - name: 📦 🎈 Unzip Fiji
-        run: unzip -q fiji-linux64.zip
+        run: unzip -q fiji-latest-linux64-jdk.zip
 
       - name: 🔁 Add Fiji update site
         run: |
