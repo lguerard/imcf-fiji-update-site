@@ -1,10 +1,10 @@
 [
   {
     "repo": "imcf/python-imcflibs",
-    "ref": "main"
+    "ref": "master"
   },
   {
     "repo": "imcf/imcf-fiji-scripts",
-    "ref": "main"
+    "ref": "master"
   }
 ]
