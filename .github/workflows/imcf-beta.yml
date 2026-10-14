@@ -2,7 +2,7 @@ name: Deploy 🚚 [UniBas-IMCF-Beta]
 
 on:
   push:
-    branches: [main] # Trigger the workflow on push to the main branch
+    branches: [main, devel] # Trigger the workflow on push to the main branch
   workflow_dispatch: # Allow to run this workflow manually from the Actions tab
 
 jobs:
@@ -72,7 +72,10 @@ jobs:
       - name: 🎁 📤 Release to ImageJ update site
         run: |
           JARS=$(sed 's|^|jars/|' build/jars.txt)
-          ./Fiji.app/ImageJ-linux64 \
+          # Only upload from main, otherwise just print the command
+          DRY=""
+          [ "${GITHUB_REF_NAME}" != "main" ] && DRY="echo [DRY RUN]"
+          $DRY ./Fiji.app/ImageJ-linux64 \
               --headless \
               --update upload \
               --update-site ${UPDATE_SITE} \
