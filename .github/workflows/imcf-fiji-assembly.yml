@@ -122,14 +122,18 @@ jobs:
 
       - name: 📦 Create zip files and set release tag
         id: prepare_release
+        env:
+          BUILD_VERSION: ${{ inputs.build_version }}
         run: |
+          NAME_PREFIX=Fiji-IMCF
+          [ "$BUILD_VERSION" == "UniBas-IMCF-Beta" ] && NAME_PREFIX=Fiji-IMCF-Beta
           # Use a timestamp (date + time) so multiple releases on the same
           # day get unique tags and artifact names.
           CURRENT_DATE=$(date +%Y-%m-%d)
           CURRENT_TIME=$(date +%H%M%S)
           TIMESTAMP="${CURRENT_DATE}-${CURRENT_TIME}"
           echo "RELEASE_TAG=v${TIMESTAMP}" >> $GITHUB_OUTPUT
-          echo "RELEASE_NAME=Fiji-IMCF ${CURRENT_DATE} ${CURRENT_TIME}" >> $GITHUB_OUTPUT
+          echo "RELEASE_NAME=${NAME_PREFIX} ${CURRENT_DATE} ${CURRENT_TIME}" >> $GITHUB_OUTPUT
           cd artifacts
           for d in Fiji.app-*; do
             if [ -d "$d" ]; then
