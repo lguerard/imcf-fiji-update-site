@@ -1,6 +1,7 @@
 name: Deploy 🚚 [UniBas-IMCF-update-site]
 
 on:
+  workflow_dispatch: # Manual runs only, from the Actions tab
     inputs:
       update_site:
         description: Update site to publish to
