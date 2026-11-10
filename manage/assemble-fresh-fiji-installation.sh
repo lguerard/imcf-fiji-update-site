@@ -133,7 +133,7 @@ run_with_xvfb_fallback() {
 
 echo "Detecting Fiji executable in $FIJI_DIR"
 FIJI_CMD=""
-for pattern in ImageJ-* fiji-*; do
+for pattern in ImageJ-*.exe fiji-*.exe; do
     for f in "$FIJI_DIR"/$pattern; do
         if [ -f "$f" ] && [ -x "$f" ]; then
             echo "Trying candidate: $f"
